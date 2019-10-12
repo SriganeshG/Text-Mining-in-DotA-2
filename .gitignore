@@ -29,7 +29,12 @@ __pycache__
 .coverage
 .pytest_cache
 src
-
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 *.swp
 *.map
 .idea/
