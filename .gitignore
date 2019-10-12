@@ -1,4 +1,12 @@
 MANIFEST
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
 build
 dist
 _build
@@ -29,12 +37,7 @@ __pycache__
 .coverage
 .pytest_cache
 src
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+
 *.swp
 *.map
 .idea/
