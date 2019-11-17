@@ -9,12 +9,10 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 
 ```{r}
 library(opendotaR)
-parsed_games <- get_latest_games(num_games = 30, min_duration = 0, wait_time = 1, output = "all")
-
-
-```
-
-```{r}
-write_json(parsed_games, "games.json")
+for (i in 4:10) {
+  parsed_games <- get_latest_games(num_games = 100, min_duration = 0, wait_time = 2, output = "all")
+  filename = paste("games10-", i, ".json", sep="")
+  write_json(parsed_games, filename)
+}
 ```
 
