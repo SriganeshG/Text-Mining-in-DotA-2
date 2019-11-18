@@ -230,23 +230,23 @@ summary {
 <p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Ctrl+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShvcGVuZG90YVIpXG5saWJyYXJ5KGpzb25saXRlKVxuZm9yIChpIGluIDUwOjEwMDApIHtcbiAgcGFyc2VkX2dhbWVzIDwtIGdldF9sYXRlc3RfZ2FtZXMobnVtX2dhbWVzID0gMTAwLCBtaW5fZHVyYXRpb24gPSAwLCB3YWl0X3RpbWUgPSAyLCBvdXRwdXQgPSBcImFsbFwiKVxuICBmaWxlbmFtZSA9IHBhc3RlKFwiZ2FtZXMxMDAtXCIsIGksIFwiLmpzb25cIiwgc2VwPVwiXCIpXG4gIHdyaXRlX2pzb24ocGFyc2VkX2dhbWVzLCBmaWxlbmFtZSlcbn1cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShvcGVuZG90YVIpXG5saWJyYXJ5KGpzb25saXRlKVxuZm9yIChpIGluIDg3OjUwMCkge1xuICBwYXJzZWRfZ2FtZXMgPC0gZ2V0X2xhdGVzdF9nYW1lcyhudW1fZ2FtZXMgPSAxMDAsIG1pbl9kdXJhdGlvbiA9IDAsIHdhaXRfdGltZSA9IDIuMSwgb3V0cHV0ID0gXCJhbGxcIilcbiAgZmlsZW5hbWUgPSBwYXN0ZShcImdhbWVzMTAwLVwiLCBpLCBcIi5qc29uXCIsIHNlcD1cIlwiKVxuICB3cml0ZV9qc29uKHBhcnNlZF9nYW1lcywgZmlsZW5hbWUpXG59XG5gYGAifQ== -->
 <pre class="r"><code>library(opendotaR)
 library(jsonlite)
-for (i in 50:1000) {
-  parsed_games &lt;- get_latest_games(num_games = 100, min_duration = 0, wait_time = 2, output = &quot;all&quot;)
+for (i in 87:500) {
+  parsed_games &lt;- get_latest_games(num_games = 100, min_duration = 0, wait_time = 2.1, output = &quot;all&quot;)
   filename = paste(&quot;games100-&quot;, i, &quot;.json&quot;, sep=&quot;&quot;)
   write_json(parsed_games, filename)
 }</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWRcbiJ9 -->
-<pre><code>the condition has length &gt; 1 and only the first element will be used</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWR0aGUgY29uZGl0aW9uIGhhcyBsZW5ndGggPiAxIGFuZCBvbmx5IHRoZSBmaXJzdCBlbGVtZW50IHdpbGwgYmUgdXNlZHRoZSBjb25kaXRpb24gaGFzIGxlbmd0aCA+IDEgYW5kIG9ubHkgdGhlIGZpcnN0IGVsZW1lbnQgd2lsbCBiZSB1c2VkXG4ifQ== -->
+<pre><code>the condition has length &gt; 1 and only the first element will be usedthe condition has length &gt; 1 and only the first element will be usedthe condition has length &gt; 1 and only the first element will be used</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkN0cmwrU2hpZnQrRW50ZXIqLiANCg0KYGBge3J9DQpsaWJyYXJ5KG9wZW5kb3RhUikNCmxpYnJhcnkoanNvbmxpdGUpDQpmb3IgKGkgaW4gNDU6NTAwKSB7DQogIHBhcnNlZF9nYW1lcyA8LSBnZXRfbGF0ZXN0X2dhbWVzKG51bV9nYW1lcyA9IDEwMCwgbWluX2R1cmF0aW9uID0gMCwgd2FpdF90aW1lID0gMiwgb3V0cHV0ID0gImFsbCIpDQogIGZpbGVuYW1lID0gcGFzdGUoImdhbWVzMTAwLSIsIGksICIuanNvbiIsIHNlcD0iIikNCiAgd3JpdGVfanNvbihwYXJzZWRfZ2FtZXMsIGZpbGVuYW1lKQ0KfQ0KYGBgDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkN0cmwrU2hpZnQrRW50ZXIqLiANCg0KYGBge3J9DQpsaWJyYXJ5KG9wZW5kb3RhUikNCmxpYnJhcnkoanNvbmxpdGUpDQpmb3IgKGkgaW4gODc6NTAwKSB7DQogIHBhcnNlZF9nYW1lcyA8LSBnZXRfbGF0ZXN0X2dhbWVzKG51bV9nYW1lcyA9IDEwMCwgbWluX2R1cmF0aW9uID0gMCwgd2FpdF90aW1lID0gMywgb3V0cHV0ID0gImFsbCIpDQogIGZpbGVuYW1lID0gcGFzdGUoImdhbWVzMTAwLSIsIGksICIuanNvbiIsIHNlcD0iIikNCiAgd3JpdGVfanNvbihwYXJzZWRfZ2FtZXMsIGZpbGVuYW1lKQ0KfQ0KYGBgDQoNCg==</div>
 
 
 
