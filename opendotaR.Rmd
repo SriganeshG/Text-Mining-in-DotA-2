@@ -10,7 +10,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r}
 library(opendotaR)
 library(jsonlite)
-for (i in 222:500) {
+for (i in 311:500) {
   parsed_games <- get_latest_games(num_games = 100, min_duration = 0, wait_time = 3, output = "all")
   filename = paste("games100-", i, ".json", sep="")
   write_json(parsed_games, filename)
