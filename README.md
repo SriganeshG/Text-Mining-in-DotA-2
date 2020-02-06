@@ -31,7 +31,7 @@ As previously mentioned, we chose to analyze chat from specifically DotA 2 due t
 
 Originally we used the OpenDota API to obtain games and their match data. However, as we got more games from OpenDota API, we found that most games were missing chat, and therefore we could not use those games. Since OpenDota API can only recover chat for games played in the last two weeks, we would have had to request a parse for recently-played games ourselves which would have taken too long. This issue meant we could no longer use the OpenDota API as we had initially hoped, and so we instead searched for premade datasets. This search returned a kaggle dataset that included over 3.5 million DotA 2 matches, which was an extremely promising as it included the data fields that we were interested in, namely chat and wins. After downloading however we started to encounter several problems that made using it infeasible. The first issue was that the file was so large that we could not actually open it to view the data and could only go off of the schema provided, as our computers did not have enough memory to load a 451 gigabyte file. Past that, once we were able to eventually hook the file up to the script, it could not handle the file as Python’s load_json function loads the *entire json* into memory before it does anything with it, and our computers certainly did not have 451GB of memory. 
 
-![image alt text](image_0.png)
+![image alt text](./images/image_0.png)
 
 **Figure 1: The YASP file was 451 GB unzipped.**
 
@@ -41,11 +41,11 @@ Another issue was that the format of each individual game was different from the
 
 After more research we found a package named ‘opendotaR’ that seemed to be able to pull only parsed games, which resolved our initial issue with the OpenDota API. We were now able to pull games with parsed chat at a rate around 1 game per 3 or 4 seconds. However, because our script and preferred machine learning library were in python, we still needed to make sure we could move and open the data without memory issues. 
 
-![image alt text](image_1.png)
+![image alt text](./images/image_1.png)
 
 **Figure 2: opendotaR and jsonlite combine to create our json files, but wait 3 seconds between each API call. **
 
-![image alt text](image_2.png)
+![image alt text](./images/image_2.png)
 
 **Figure 3: The first 10 JSONS stored in our repository**
 
@@ -71,7 +71,7 @@ As we assigned these chat message objects, we also scanned the actual text insid
 
 These words would go on to become the columns in our dataframe, and we used the previously created lists of winning and losing chats to populate the rows. Before inserting them into the dataframe, we added a value of 1 or 0 to the front, meant to signify if the row was from a winning or losing team. 
 
-![image alt text](image_3.png)
+![image alt text](./images/image_3.png)
 
 **Figure 4: A subset of our final dataframe before we ran models. The full dataframe would have around 62,000 rows.**
 
@@ -83,7 +83,7 @@ When running our models, we used 80% of this dataframe as the training data and 
 
 The first model we chose to run is Naïve Bayes, following the standard of using this as a baseline for the rest of our models. Naïve Bayes models run on the assumption that the predictors are conditionally independent from one another, however we know this is not the case for our model. For example, it is very likely for the word "well" to be followed by “played” in chat culture of DotA 2. We also know that we’ve separated several multi-word pings as well, so there was a high chance that some of our most common words would not be independent. Knowing that our data does not meet the assumptions for  Naïve Bayes, we did not expect to have good prediction accuracy with this model. 
 
-![image alt text](image_4.png)
+![image alt text](./images/image_4.png)
 
 **Figure 5: Our prediction accuracy after training a Naïve Bayes model.**
 
@@ -93,13 +93,13 @@ As you can our results from Naïve Bayes were not great, but as expected. We wer
 
 The next model we chose to implement was K-nearest neighbors. We had higher expectations of this model because there are no assumptions made about the underlying data distribution or conditional dependency. To begin, we ran cross-validation to choose an appropriate k-value, which turned out to be 6 here.
 
-![image alt text](image_5.png)
+![image alt text](./images/image_5.png)
 
 **Figure 6: Cross validation on our KNN model tells us that our best k-value is 6.**
 
 However, KNN is not without its downsides. As the number of games got very large, the model began to take a very long time to make its predictions. This is because KNN calculates the closest K-nearest neighbors everytime it makes a prediction, rather than having a training phase. So when we have a large set of games, we must check all of them to see which games are closest to the game we want to predict. 
 
-![image alt text](image_6.png).	
+![image alt text](./images/image_6.png).	
 
 **Figure 7: The results our KNN model using k = 6.**
 
@@ -110,7 +110,7 @@ After running Knn our model was able to predict 55 percent of game results corre
 The model type that we expected to perform the best was the Decision Tree model. This is because the meaning of a word is dependent on the words around it. For example, the meaning of the phrase "we had a good game" has a positive connotation while “we did not have a good game” has a negative connotation. We see that these phrases use a lot of the same words, but have opposite meanings conditional on the presence of the word “not”. The structure of a decision tree allows for the meaning of one feature to be conditional on another, therefore we are able to retain this important information in our model.
 
 
-![image alt text](image_7.png)
+![image alt text](./images/image_7.png)
 
 **Figure 8: The Decision Tree’s visual representations**
 
@@ -122,7 +122,7 @@ As our results show, our decision tree was able to predict the outcome correctly
 
 After we saw how well our decision tree model was doing, we decided to make a Random Forest Model. Random Forests addresses a few of the problems that arises from Decision Trees. Random Forests are able to reduce variance by taking the average of multiple trees. Decision Trees are also prone to overfitting, especially with a deep tree. However, there is a tradeoff of better accuracy for more complexity and less interpretability. Using cross validation we obtained 91 trees for our Random Forest. Our Random Forest model gave us an accuracy of 61.48%, which was the best accuracy out of all our models.
 
-![image alt text](image_8.png)
+![image alt text](./images/image_8.png)
 
 **Figure 9: The visual representations of a random tree from the Random Forest. There were 90 other trees like this one, with slight variations.****
 **
@@ -131,11 +131,11 @@ After we saw how well our decision tree model was doing, we decided to make a Ra
 
 PCA was not one of the models that we initially ran, and was only added on after our presentation as something we wanted to try. Due to there being many correlated words, we thought PCA might help reduce our features by a sizeable amount. However, after running the model, we found that our predictors did not compress as well as we had hoped, and we ended up with around 350 components. The best of these components were not able to explain more than 0.02% of the total variance and the majority of them explained effectively 0% of it.
 
-![image alt text](image_9.png)
+![image alt text](./images/image_9.png)
 
 **Figure 10: The explained variance of the first several components of our PCA model**
 
-![image alt text](image_10.png)
+![image alt text](./images/image_10.png)
 
 **Figure 11: A plot of the explained variance of all 300 of our components**
 
