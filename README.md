@@ -1,4 +1,5 @@
-**Text Analytics in DotA 2: Predicting Victory From Cross-Team Chat**
+**Text Analytics in DotA 2: 
+Predicting Victory From Cross-Team Chat**
 
 Sriganesh Gopal, Rees Braam, Jared Robertson, Wayne Ji
 
@@ -16,7 +17,9 @@ DotA 2 is an online MOBA video game that pits two teams of five players against 
 
 There have been many studies and research projects conducted to try to predict game outcomes based on statistics, this is not a foreign concept. However, these projects are already rooted in a basic truth; that is, in any game, there will pretty much always be a trend between the numbers (or at least some of them) and the game outcome - it is guaranteed. For example, there is no written law that the team with the most rebounds or field goals in the NBA will win the game, but there is almost certainly a trend that the team with the better numbers will usually win - and they do. This was an idea we considered for our project (before we had picked DotA 2), but we felt that is was a bit overplayed and that we could look at something a little more unique. Don’t get us wrong, we know that this, too, has been done before in some capacity. However, to us, this was something we both cared about and were more interested in, and something that was less explored as a concept. All members of our team have played video games before, and we know all too well what statistics can predict a team win without doing a project on it. This is how we settled on predicting victories from chat: it is obvious that statistics like gold, kills, deaths, etc can predict a win. But what about words somebody says? Chat is seemingly a wildcard, and yet you can still predict the chat of a game. As players ourselves, we know that if we make a big mistake, we can expect that "report team" in chat, or that if we get crushed we can look forward to a “gg ez” coming at the end. Therefore, if we think can predict chat from game state or outcome, is it possible to predict game outcome from chat? This single question was the core motivation of our project. This core question is what led us to DotA 2, as its API contains the chat logs from each game. 
 
-**1.2  Background**DotA 2 is a multiplayer online battle arena (MOBA) video game developed and published by Valve. Originally developed as a mod for an action real-time-strategy (RTS) game, Warcraft 3, DotA 2 became so popular that it was developed into its own game, inspiring the entire genre of MOBA video games that continues to thrive today. Each match pits two teams of five players against each other to out-wit their foes to destroy their base. It is a multi-faceted game that combines and requires player skills in strategy (macro), mechanics (micro), leadership, communication, and many others. Winning a game will improve a player’s Match-Making Rating (MMR), and losing will decrease it. Prestige in DotA 2 is almost exclusively dependent on a player’s MMR, and so is highly dependent on a player’s ability to win. This is not unlike many other video games and sports. 
+**1.2  Background**
+
+DotA 2 is a multiplayer online battle arena (MOBA) video game developed and published by Valve. Originally developed as a mod for an action real-time-strategy (RTS) game, Warcraft 3, DotA 2 became so popular that it was developed into its own game, inspiring the entire genre of MOBA video games that continues to thrive today. Each match pits two teams of five players against each other to out-wit their foes to destroy their base. It is a multi-faceted game that combines and requires player skills in strategy (macro), mechanics (micro), leadership, communication, and many others. Winning a game will improve a player’s Match-Making Rating (MMR), and losing will decrease it. Prestige in DotA 2 is almost exclusively dependent on a player’s MMR, and so is highly dependent on a player’s ability to win. This is not unlike many other video games and sports. 
 
 **2.  Data Collection**
 
@@ -106,7 +109,8 @@ After running Knn our model was able to predict 55 percent of game results corre
 
 The model type that we expected to perform the best was the Decision Tree model. This is because the meaning of a word is dependent on the words around it. For example, the meaning of the phrase "we had a good game" has a positive connotation while “we did not have a good game” has a negative connotation. We see that these phrases use a lot of the same words, but have opposite meanings conditional on the presence of the word “not”. The structure of a decision tree allows for the meaning of one feature to be conditional on another, therefore we are able to retain this important information in our model.
 
-![image alt text](image_7.png)
+
+![image alt text](image_7.png)
 
 **Figure 8: The Decision Tree’s visual representations**
 
@@ -120,7 +124,8 @@ After we saw how well our decision tree model was doing, we decided to make a Ra
 
 ![image alt text](image_8.png)
 
-**Figure 9: The visual representations of a random tree from the Random Forest. There were 90 other trees like this one, with slight variations.******
+**Figure 9: The visual representations of a random tree from the Random Forest. There were 90 other trees like this one, with slight variations.****
+**
 
 **4.5 PCA**
 
@@ -136,17 +141,21 @@ PCA was not one of the models that we initially ran, and was only added on after
 
 While we would have liked to be able to run our models with the principal components, we deemed it not worth our time in the last two weeks of the semester and instead focused our time on cloud computing, an endeavor we found much more promising and which had a much higher potential.
 
-**5. Cloud Computing**
+**5. Cloud Computing
+**
 
 Over the course of our entire project, there was always one major limitation in running our models, and that was our hardware limiting the size of the models that we could fit and train. We were never able to run our models on our full dataset as it was too big. The best solution to this problem was to use hardware that could handle it, and that involves cloud computing. We applied to use the UNC Longleaf Computing Cluster, and uploaded our data into the PINE server (UNCs’ scratch and work file storage) using GLOBUS (A large-file transfer application) and got ready to submit our job into the SLURM scheduler but it would not get to run our code in time as the computing clusters are in high demand by all the researchers at UNC. Instead we decided to use Amazon Web Services to host and process our data. At first we had hoped to use Sagemaker since it includes preset templates for machine learning processes, but in the end we decided to use Amazon EC2 (Elastic Compute Cloud) to host a memory-optimized VM that could run our code for us.
 
 We uploaded our data to Amazon S3 (Simple Storage Solutions), then created a new EC2 instance of type r4.8xlarge, which is a large memory-optimized cluster having 244 gigabytes of memory which solved our previous problems. We then transferred our data to Amazon EBS (Elastic Block Store) which provides block level storage volumes for EC2 usage. From this we could quickly transfer data to and from our S3 storage to EBS storage whenever we wanted too. After copying our data in our EBS volume, we could access it in our EC2 instance. After this we installed Anaconda and other necessary packages to run our Python script, and uploaded our Jupyter Notebook. Running the notebook, it was immediately clear that it was much faster compared to our machines as portions of the script that previously took hours to run now took minutes. The code was running, until what we can assume to be a small service interruption happened since the server stopped and started just giving a generic network error. Due to this error wasting a large amount of our time since our dataset was more than triple the size of what we ran before, we knew that we did not have enough time until the submission date of the project. Even though we were not able to finish this in time, if given a few extra days we know that we could have gotten amazing results, possibly beating our previous accuracy of 61.48% due to a much larger set of data to train on.
 
-The process of being able to rent out a computing cluster in a matter of minutes and getting started on running code on it has verified the hype behind cluster computing for anyone with a modicum of programming knowledge. Our use of cloud computing confirms that the emergence of this process is not a company buzzword, but a legitimately useful and cost-effective piece of technology. Given some extra time, we feel like we could have gotten our models to run on Amazons’ EC2 cluster as the initial setup was not very difficult, the only difficult part was waiting hours for the model to finish training and testing.****
+The process of being able to rent out a computing cluster in a matter of minutes and getting started on running code on it has verified the hype behind cluster computing for anyone with a modicum of programming knowledge. Our use of cloud computing confirms that the emergence of this process is not a company buzzword, but a legitimately useful and cost-effective piece of technology. Given some extra time, we feel like we could have gotten our models to run on Amazons’ EC2 cluster as the initial setup was not very difficult, the only difficult part was waiting hours for the model to finish training and testing.**
+**
 
-****
+**
+**
 
-**6. Conclusions and Improvements**
+**6. Conclusions and Improvements
+**
 
 **6.1 Conclusions**
 
@@ -162,7 +171,11 @@ While we were overall satisfied with our results and the end state of our projec
 
 3. With how large our data frame is, and especially how sparse, we think it could really benefit from having a significantly larger set of matches to train on. Of course, this is a bit of a so-called ‘freebie’ when it comes to machine learning, but with the way we are conducting our data analysis, more data is critical. Our low pre-processing leaves a lot of unique words due to typos and normal variation. This is acceptable, and indeed, what we wanted; however, it suffers in a scenario where it does not have a large enough sample to identify the more unique words that influence a game’s outcome. For example, with a low number of games, the model will still pick out words such as "good" and “game” because they are in pretty much every game. However, it may be less successful at picking out other words that are still influential but less common. In essence, our model may strengthen more with additional data compared to the average model, and we think it could really shine if it was able to use a sample on the scale of millions of matches.
 
-**References**Jurafsky, Dan, and James H. Martin. Speech and Language Processing: an Introduction to Natural Language Processing, Computational Linguistics, and Speech Recognition. 3rd ed., 2019, web.stanford.edu/~jurafsky/slp3/edbook_oct162019.pdf.
+
+**References
+
+**Jurafsky, Dan, and James H. Martin. Speech and Language Processing: an Introduction to
+ Natural Language Processing, Computational Linguistics, and Speech Recognition. 3rd ed., 2019, web.stanford.edu/~jurafsky/slp3/edbook_oct162019.pdf.
 
 Pedregosa, Fabian and Gaël Varoquaux, and Alexandre Gramfort and Vincent Michel and Bertrand Thirion and Olivier Grisel and Mathieu Blondel and Peter Prettenhofer and Ron Weiss. and Vincent Dubourg Jake and Vanderplas and Alexandre Passos and David Cournapeau and Matthieu Brucher and MatthieuPerrot and Édouard Duchesnay. "Scikit-learn: Machine Learning in Python.” *Journal of Machine Learning Research *12 (2011): 2825-2850. Print.
 
@@ -175,18 +188,3 @@ Navlani, Avinash. "Naive Bayes Classification Using Scikit-Learn." DataCamp Comm
 Koehrsen, Will. "How to Visualize a Decision Tree from a Random Forest in Python Using Scikit-Learn." Medium, Towards Data Science, 19 Aug. 2018, towardsdatascience.com/how-to-visualize-a-decision-tree-from-a-random-forest-in-python-using-scikit-learn-38ad2d75f21c.
 
 Gonsales, Arthur. "An Approach to Choosing the Number of Components in a Principal Component Analysis." Medium, Towards Data Science, 12 Sept. 2018, towardsdatascience.com/an-approach-to-choosing-the-number-of-components-in-a-principal-component-analysis-pca-3b9f3d6e73fe.
-
-**Work Allocation**
-
-Cloud computing: Sri
-
-Paper writing: Headed by Rees, everyone contributed
-
-Analysis: All
-
-Model Creation: Headed by Jared, everyone contributed
-
-Script Writing: All
-
-Everybody was present at all team meetings
-
