@@ -1,0 +1,743 @@
+{
+ "metadata": {
+  "file_extension": ".py",
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.4"
+  },
+  "mimetype": "text/x-python",
+  "name": "python",
+  "npconvert_exporter": "python",
+  "pygments_lexer": "ipython3",
+  "version": 3
+ },
+ "nbformat": 3,
+ "nbformat_minor": 0,
+ "worksheets": [
+  {
+   "cells": [
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import numpy as np\n",
+      "np.random.seed(69696969)\n",
+      "import requests\n",
+      "import json"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 1
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "wins = {}\n",
+      "losses = {}\n",
+      "both = {}\n",
+      "\n",
+      "def remove_non_ascii(text):\n",
+      "    return ''.join(i for i in text if ord(i)<128)\n",
+      "\n",
+      "for i in range(1,101):\n",
+      "    filename = 'games100-' + str(i) + '.json'\n",
+      "    with open(filename, 'r', encoding=\"utf-8\") as data_file:\n",
+      "        data = json.load(data_file)\n",
+      "\n",
+      "        for element in data:\n",
+      "            element['match_id'] = str(element['match_id']).replace('[', '').replace(']', '')\n",
+      "            element['radiant_win'] = str(element['radiant_win']).replace('[', '').replace(']', '')\n",
+      "            r = element\n",
+      "\n",
+      "            r.pop('all_word_counts', None)\n",
+      "    #         r.pop('match_id', None)\n",
+      "            r.pop('barracks_status_dire', None)\n",
+      "            r.pop('barracks_status_radiant', None)\n",
+      "    #         r.pop('chat', None)\n",
+      "            r.pop('cluster', None)\n",
+      "            r.pop('cosmetics', None)\n",
+      "            r.pop('dire_score', None)\n",
+      "            r.pop('dire_team_id', None)\n",
+      "            r.pop('draft_timings', None)\n",
+      "            r.pop('duration', None)\n",
+      "            r.pop('engine', None)\n",
+      "    #         r.pop('first_blood_time', None)\n",
+      "    #         r.pop('game_mode', None)\n",
+      "            r.pop('human_players', None)\n",
+      "            r.pop('leagueid', None)\n",
+      "            r.pop('lobby_type', None)\n",
+      "            r.pop('match_seq_num', None)\n",
+      "            r.pop('negative_votes', None)\n",
+      "            r.pop('objectives', None)\n",
+      "            r.pop('picks_bans', None)\n",
+      "            r.pop('positive_votes', None)\n",
+      "            r.pop('radiant_gold_adv', None)\n",
+      "            r.pop('radiant_score', None)\n",
+      "            r.pop('radiant_team_id', None)\n",
+      "    #         r.pop('radiant_win', None)\n",
+      "            r.pop('radiant_xp_adv', None)\n",
+      "            r.pop('skill', None)\n",
+      "            r.pop('start_time', None)\n",
+      "            r.pop('teamfights', None)\n",
+      "            r.pop('tower_status_dire', None)\n",
+      "            r.pop('tower_status_radiant', None)\n",
+      "            r.pop('version', None)\n",
+      "            r.pop('replay_salt', None)\n",
+      "            r.pop('series_id', None)\n",
+      "            r.pop('series_type', None)\n",
+      "            r.pop('players', None)\n",
+      "            r.pop('patch', None)\n",
+      "            r.pop('region', None)\n",
+      "            r.pop('throw', None)\n",
+      "            r.pop('loss', None)\n",
+      "            r.pop('win', None)\n",
+      "            r.pop('my_word_counts', None)\n",
+      "            r.pop('comeback', None)\n",
+      "            r.pop('stomp', None)\n",
+      "            r.pop('replay_url', None)\n",
+      "\n",
+      "            pop_chat = []\n",
+      "            for index, item in enumerate(r['chat']):\n",
+      "                if item['slot'] == 10:\n",
+      "                    pop_chat.append(index)\n",
+      "\n",
+      "            with open('chat_wheel.json', 'r',encoding='utf8') as data_file:\n",
+      "                chat_wheel = json.load(data_file)\n",
+      "\n",
+      "            for idx, item in enumerate(r['chat']):\n",
+      "                if item['type'] == 'chatwheel':\n",
+      "                    item['type'] = 'chat'\n",
+      "                    item['key'] = chat_wheel[item['key']].get('message')\n",
+      "\n",
+      "            for index, item in enumerate(r['chat']):\n",
+      "                if item['type'] == 'chat':\n",
+      "                    if item['key'] is not None:\n",
+      "                        remove_non_ascii(item['key'])\n",
+      "\n",
+      "            \n",
+      "            both[element['match_id']] = r\n",
+      "\n",
+      "            if r['radiant_win'] == str('True'):\n",
+      "                wins[element['match_id']] = r\n",
+      "            else:\n",
+      "                losses[element['match_id']] = r\n",
+      "                \n",
+      "    data_file.close()"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 2
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# wins"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 3
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import copy\n",
+      "win_chats={}\n",
+      "lose_chats={}\n",
+      "for game in wins:\n",
+      "    game_copy = copy.deepcopy(wins[game])\n",
+      "    game_copy['chat']=[line for line in wins[game]['chat'] if not (line['slot']>4)]\n",
+      "    #print(game_copy)\n",
+      "    win_chats[game]=game_copy\n",
+      "    \n",
+      "    game_copy = copy.deepcopy(wins[game])\n",
+      "    game_copy['chat']=[line for line in wins[game]['chat'] if not (line['slot']<=4)]\n",
+      "    #print(game_copy)\n",
+      "    lose_chats[game]=game_copy\n",
+      "\n",
+      "for game in losses:\n",
+      "    game_copy = copy.deepcopy(losses[game])\n",
+      "    game_copy['chat']=[line for line in losses[game]['chat'] if not (line['slot']>4)]\n",
+      "    lose_chats[game]=game_copy\n",
+      "    \n",
+      "    game_copy = copy.deepcopy(losses[game])\n",
+      "    game_copy['chat']=[line for line in losses[game]['chat'] if not (line['slot']<=4)]\n",
+      "    #print(game_copy)\n",
+      "    win_chats[game]=game_copy\n",
+      "\n",
+      "# print(win_chats) \n",
+      "# print(len(win_chats))\n",
+      "# print(lose_chats) \n",
+      "# len(lose_chats)\n"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 4
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "wordDict = {}\n",
+      "for game in both.keys():\n",
+      "    for i in both[game]['chat']:\n",
+      "        if i['key'] is not None:\n",
+      "            for word in i['key'].split():\n",
+      "                if word in wordDict:\n",
+      "                    wordDict[word] = wordDict[word]+1\n",
+      "                else:\n",
+      "                    wordDict[word]=1\n",
+      "        "
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 5
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# print(len(both.keys()))\n",
+      "# for i in both.keys():\n",
+      "#     print(i)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 6
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# wordDict"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 7
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import operator\n",
+      "wordDictCounts = sorted(wordDict.items(), key=operator.itemgetter(1))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 8
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# wordDictCounts[::-1]"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 9
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "words = list(wordDict.keys())"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 10
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# words"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 11
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 12
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "words.insert(0,'Wins')"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 12
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import numpy as np\n",
+      "AllWords = np.zeros((len(both)*2,len(wordDict)+1), dtype=int)\n",
+      "game_index = 0\n",
+      "for game in win_chats.keys():\n",
+      "    AllWords[game_index][0]=1\n",
+      "    for line in win_chats[game]['chat']:\n",
+      "        if line['key'] is not None:\n",
+      "            for word in line['key'].split():\n",
+      "                AllWords[game_index][words.index(word)]=AllWords[game_index][words.index(word)]+1\n",
+      "    game_index+=1\n",
+      "for game in lose_chats.keys():\n",
+      "    for line in lose_chats[game]['chat']:\n",
+      "        if line['key'] is not None:\n",
+      "            for word in line['key'].split():\n",
+      "                AllWords[game_index][words.index(word)]=AllWords[game_index][words.index(word)]+1\n",
+      "    game_index+=1"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 13
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# AllWords"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 14
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import pandas as pd \n",
+      "df = pd.DataFrame(AllWords, columns = words) "
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 15
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 16
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "X = df.iloc[:,1:].values\n",
+      "y = df.iloc[:,0].values"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 16
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.model_selection import train_test_split\n",
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 17
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# y_test"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 18
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.preprocessing import StandardScaler\n",
+      "scaler = StandardScaler(copy=False)\n",
+      "# StandardScaler(copy=False,with_mean=False).fit(X_train)\n",
+      "scaler.fit(X_train)\n",
+      "\n",
+      "X_train = scaler.transform(X_train)\n",
+      "X_test = scaler.transform(X_test)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 19
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.neighbors import KNeighborsClassifier\n",
+      "classifier = KNeighborsClassifier(n_neighbors=6)\n",
+      "classifier.fit(X_train, y_train)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "pyout",
+       "prompt_number": 20,
+       "text": [
+        "KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',\n",
+        "                     metric_params=None, n_jobs=None, n_neighbors=6, p=2,\n",
+        "                     weights='uniform')"
+       ]
+      }
+     ],
+     "prompt_number": 20
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "y_pred = classifier.predict(X_test)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 21
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.metrics import classification_report, confusion_matrix\n",
+      "print(confusion_matrix(y_test, y_pred))\n",
+      "print(classification_report(y_test, y_pred))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "output_type": "stream",
+       "stream": "stdout",
+       "text": [
+        "[[1608  476]\n",
+        " [1382  677]]\n",
+        "              precision    recall  f1-score   support\n",
+        "\n",
+        "           0       0.54      0.77      0.63      2084\n",
+        "           1       0.59      0.33      0.42      2059\n",
+        "\n",
+        "    accuracy                           0.55      4143\n",
+        "   macro avg       0.56      0.55      0.53      4143\n",
+        "weighted avg       0.56      0.55      0.53      4143\n",
+        "\n"
+       ]
+      }
+     ],
+     "prompt_number": 22
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# error = []\n",
+      "\n",
+      "# # Calculating error for K values between 1 and 40\n",
+      "# for i in range(1, 40):\n",
+      "# #     print(i)\n",
+      "#     knn = KNeighborsClassifier(n_neighbors=i)\n",
+      "#     knn.fit(X_train, y_train)\n",
+      "#     pred_i = knn.predict(X_test)\n",
+      "#     error.append(np.mean(pred_i != y_test))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 23
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import matplotlib.pyplot as plt\n",
+      "plt.figure(figsize=(12, 6))\n",
+      "plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o',\n",
+      "         markerfacecolor='blue', markersize=10)\n",
+      "plt.title('Error Rate K Value')\n",
+      "plt.xlabel('K Value')\n",
+      "plt.ylabel('Mean Error')"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "ename": "NameError",
+       "evalue": "name 'error' is not defined",
+       "output_type": "pyerr",
+       "traceback": [
+        "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+        "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+        "\u001b[0;32m<ipython-input-24-ba0fd695223d>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mmatplotlib\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mpyplot\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mplt\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0mplt\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfigure\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfigsize\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m12\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m6\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 3\u001b[0;31m plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o',\n\u001b[0m\u001b[1;32m      4\u001b[0m          markerfacecolor='blue', markersize=10)\n\u001b[1;32m      5\u001b[0m \u001b[0mplt\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtitle\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'Error Rate K Value'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+        "\u001b[0;31mNameError\u001b[0m: name 'error' is not defined"
+       ]
+      }
+     ],
+     "prompt_number": 24
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "#Import Gaussian Naive Bayes model\n",
+      "from sklearn.naive_bayes import GaussianNB\n",
+      "\n",
+      "#Create a Gaussian Classifier\n",
+      "gnb = GaussianNB(priors = [.5,.5])\n",
+      "\n",
+      "#Train the model using the training sets\n",
+      "gnb.fit(X_train, y_train)\n",
+      "\n",
+      "#Predict the response for test dataset\n",
+      "y_pred = gnb.predict(X_test)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn import metrics\n",
+      "\n",
+      "# Model Accuracy, how often is the classifier correct?\n",
+      "print(\"Accuracy:\",metrics.accuracy_score(y_test, y_pred))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier\n",
+      "from sklearn.model_selection import train_test_split # Import train_test_split function\n",
+      "from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation\n",
+      "from sklearn import tree\n",
+      "import graphviz\n",
+      "\n",
+      "# Create Decision Tree classifer object\n",
+      "clf = DecisionTreeClassifier()\n",
+      "\n",
+      "# Train Decision Tree Classifer\n",
+      "clf = clf.fit(X_train,y_train)\n",
+      "\n",
+      "# tree.plot_tree(clf, max_depth = 2)\n",
+      "dot_data = tree.export_graphviz(clf, out_file=None, filled=True, rounded=True, special_characters=True, max_depth = 2, feature_names=words[1:], class_names=[\"loss\", \"win\"])  \n",
+      "graph = graphviz.Source(dot_data)  \n",
+      "\n",
+      "#Predict the response for test dataset\n",
+      "y_pred = clf.predict(X_test)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "graph"
+     ],
+     "language": "python",
+     "metadata": {
+      "scrolled": false
+     },
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "print(\"Accuracy:\",metrics.accuracy_score(y_test, y_pred))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "from sklearn.model_selection import KFold, cross_val_score\n",
+      "k_fold = KFold(n_splits=3, shuffle=True, random_state=0)\n",
+      "clf = DecisionTreeClassifier()\n",
+      "print(cross_val_score(clf, X_train, y_train, cv=k_fold, n_jobs=1))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "#Import Random Forest Model\n",
+      "from sklearn.ensemble import RandomForestClassifier\n",
+      "\n",
+      "#Create a Gaussian Classifier\n",
+      "clf=RandomForestClassifier(n_estimators=100)\n",
+      "\n",
+      "#Train the model using the training sets y_pred=clf.predict(X_test)\n",
+      "clf.fit(X_train,y_train)\n",
+      "\n",
+      "estimator = clf.estimators_[9]\n",
+      "\n",
+      "tree.plot_tree(estimator)\n",
+      "dot_data = tree.export_graphviz(estimator, out_file=None, filled=True, rounded=True, special_characters=True, max_depth = 2, feature_names=words[1:], class_names=[\"loss\", \"win\"])  \n",
+      "graph = graphviz.Source(dot_data)  \n",
+      "\n",
+      "y_pred=clf.predict(X_test)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "graph"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "#Import scikit-learn metrics module for accuracy calculation\n",
+      "from sklearn import metrics\n",
+      "# Model Accuracy, how often is the classifier correct?\n",
+      "print(\"Accuracy:\",metrics.accuracy_score(y_test, y_pred))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# from sklearn.model_selection import KFold, cross_val_score\n",
+      "# k_fold = KFold(n_splits=3, shuffle=True, random_state=0)\n",
+      "# clf = RandomForestClassifier(n_estimators=91)\n",
+      "# print(cross_val_score(clf, X, y, cv=k_fold, n_jobs=1))"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# from sklearn.model_selection import KFold, cross_val_score\n",
+      "# Forest_numbers={}\n",
+      "# for k in range(51,151,10):\n",
+      "#     k_fold = KFold(n_splits=11, shuffle=True, random_state=0)\n",
+      "#     clf = RandomForestClassifier(n_estimators=k)\n",
+      "#     Forest_numbers[k] = cross_val_score(clf, X, y, cv=k_fold, n_jobs=1)"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# Forest_numbers"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": null
+    }
+   ],
+   "metadata": {}
+  }
+ ]
+}
