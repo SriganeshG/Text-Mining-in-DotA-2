@@ -1,2 +1,5 @@
-# Text-Mining-in-DotA-2
-big data neural networks deep learning cloud computing synergistic management solutions maching learning artificial intelligence
+# Text Analytics in DotA 2: 
+# Predicting Victory From Cross-Team Chat
+
+## Abstract
+DotA 2 is an online MOBA video game that pits two teams of five players against one another in a strategy-based brawl to destroy the other base. We collected data from around 31,000 matches of DotA 2 from the OpenDota API (https://docs.opendota.com/), an open source DotA 2 data-collection platform. After collating the matches we converted quick-chat pings and pre-set phrases to be aligned to the formatting of regular chat. We created a dataframe of individual word counts from this stringified game chat using space as our only delimiter, splitting each game into 2 rows to differentiate between win and loss. With this dataframe, we ran several classification models to attempt to predict if a team will win based on game chat. Our peak classification rate resulted from our Random Forest Classifier model, predicting the outcome correctly 61.48% of the time. This may seem low, but this is better than expected as games are matchmade to be balanced in skill and behavior score, so overcoming a normalizing factor is very good.
